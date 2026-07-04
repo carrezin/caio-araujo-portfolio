@@ -6,7 +6,7 @@ import { processSteps } from '../data/process'
 
 const Process = () => (
   <section className="section-padding relative">
-    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[300px] bg-accent-blue/8 rounded-full blur-[130px]" />
+    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[220px] h-[140px] md:w-[500px] md:h-[300px] bg-accent-blue/8 rounded-full blur-[55px] md:blur-[130px]" />
 
     <div className="max-w-6xl mx-auto relative">
       <SectionTitle

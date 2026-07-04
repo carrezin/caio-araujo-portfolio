@@ -8,3 +8,12 @@ ReactDOM.createRoot(document.getElementById('root')).render(
     <App />
   </React.StrictMode>,
 )
+
+// Registro do service worker (gerado pelo vite-plugin-pwa em build de produção).
+// Em dev, o módulo virtual não existe de forma útil, então isolamos o registro
+// e ignoramos silenciosamente se ele não estiver disponível.
+if (import.meta.env.PROD) {
+  import('virtual:pwa-register')
+    .then(({ registerSW }) => registerSW({ immediate: true }))
+    .catch(() => {})
+}

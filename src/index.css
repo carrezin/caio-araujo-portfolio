@@ -203,9 +203,30 @@ body {
     background: var(--cursor-glow);
     will-change: transform;
   }
-  .cursor-glow--drift {
-    opacity: 0.1;
-    animation: glow-drift 30s ease-in-out infinite;
+  /* ---------- Modo performance (mobile/touch) ----------
+     Ativado via classe .perf-mode no <html> (boot script em index.html,
+     antes do primeiro paint). Reduz o custo de backdrop-filter/blur/sombras
+     nas superfícies de vidro, mantendo a estética Liquid Glass mais leve.
+     Escopo: dispositivo (isMobile), não prefers-reduced-motion — os efeitos
+     de fundo/cursor do desktop continuam intactos mesmo com reduced-motion. */
+  .perf-mode .liquid-glass,
+  .perf-mode .icon-btn-glass,
+  .perf-mode .btn-secondary {
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    box-shadow: inset 0 1px 0 0 var(--glass-shine), 0 4px 14px -10px var(--glass-shadow);
+  }
+  .perf-mode .glass-card,
+  .perf-mode .chip-glass {
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+  .perf-mode .badge-glass {
+    backdrop-filter: blur(6px);
+  }
+  .perf-mode .btn-primary {
+    backdrop-filter: blur(6px);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35), 0 4px 14px -8px rgba(34, 211, 238, 0.4);
   }
 
   .text-gradient {
@@ -267,21 +288,5 @@ body {
   .btn-secondary:hover {
     background: var(--glass-bg-strong);
     border-color: rgba(34, 211, 238, 0.35);
-  }
-}
-
-@keyframes glow-drift {
-  0%,
-  100% {
-    transform: translate3d(5vw, 65vh, 0);
-  }
-  25% {
-    transform: translate3d(65vw, 15vh, 0);
-  }
-  50% {
-    transform: translate3d(80vw, 70vh, 0);
-  }
-  75% {
-    transform: translate3d(25vw, 30vh, 0);
   }
 }

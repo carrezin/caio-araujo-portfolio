@@ -129,4 +129,42 @@ PROJECT_CONTEXT.md    [novo — este arquivo]
 
 ---
 
-*Documento gerado em 04/07/2026 às 14:30 (horário local), ao final da sessão de desenvolvimento inicial.*
+## 7. Sessão 2 — Otimização mobile e PWA (v1.0.1)
+
+Entre o fim da Sessão 1 (~14:30) e o início desta sessão (~16:00 do mesmo dia), o projeto foi publicado no **Cloudflare Pages** com deploy automático a partir do repositório `github.com/carrezin/caio-araujo-portfolio` (git inicializado e conectado fora do escopo registrado por este assistente — o repositório já existia, com um commit `chore: versão inicial do portfólio profissional`, quando esta sessão começou).
+
+### 7.1 Contexto do pedido
+
+O usuário reportou que o site, já aprovado visualmente em desktop e mobile, estava demorando para carregar em celulares — principalmente iPhones mais antigos (ex.: iPhone 11 Pro/Safari) — e às vezes mostrava só o background antes do resto da página aparecer. Pediu uma otimização mobile "inteligente" (desktop mantém tudo, mobile fica leve) e a transformação do site em PWA instalável (Android e iOS), com validação de build e commit/tag versionados — sem push automático.
+
+### 7.2 Diagnóstico (antes de alterar)
+
+Leitura completa de `App.jsx`, `main.jsx`, `index.css`, `vite.config.js`, `index.html` e todos os componentes. Identificados como pontos pesados para a primeira renderização em mobile:
+- `ParticleBackground.jsx`: canvas 2D com `requestAnimationFrame` contínuo, sempre montado (mesmo em telas pequenas).
+- `CursorGlow.jsx`: já tinha um modo "drift" alternativo para touch (animação CSS em loop de 30s) — rodando mesmo sem necessidade, já que não há cursor real em touch.
+- `Hero.jsx`: stagger de entrada do Framer Motion com delays acumulados de até ~1,7s antes do mockup do dashboard terminar de aparecer — atrasando o conteúdo principal (candidato a LCP).
+- Gráfico de barras do mockup do Hero: animava a propriedade `height` (layout-affecting) em 12 elementos simultâneos — caro em dispositivos mais antigos.
+- Todas as 11 seções carregavam no bundle inicial (sem code-splitting).
+- Classes de vidro (`liquid-glass`, `glass-card` etc.) com `backdrop-filter: blur(16px) saturate(140%)` fixo, sem variante mais leve.
+- Vários blobs de luz ambiente (`blur-[120px]` a `blur-[140px]`, 350–500px) renderizados no mesmo tamanho em qualquer tela.
+
+### 7.3 Decisões de arquitetura
+
+- **`useIsMobile` (dispositivo) ≠ `useReducedMotion` (acessibilidade do SO), deliberadamente.** Os efeitos "sagrados" do desktop (`ParticleBackground`, `CursorGlow`) e a classe `.perf-mode` (que reduz blur/sombras) são gatilhados **só** por `useIsMobile`. Isso preserva a decisão de produto já tomada na Sessão 1 (efeitos de fundo/cursor sempre ativos no desktop, mesmo com `prefers-reduced-motion` ligado no SO) e evita repetir o bug relatado naquela sessão ("o mouse não acompanha o fundo") para um usuário desktop com essa preferência ativada.
+- **`prefers-reduced-motion` é respeitado, mas só para animação (Framer Motion), não para "material" (blur/vidro).** Implementado via `<MotionConfig reducedMotion="user">` em `App.jsx` — mecanismo nativo do Framer Motion que remove animações de `x`/`y`/`scale`/`rotate` e mantém só opacidade, aplicado a toda a árvore sem precisar editar cada componente individualmente.
+- **Detecção de mobile roda antes do primeiro paint.** O boot script do `index.html` (o mesmo que já aplicava o tema claro/escuro antes do React montar) ganhou uma segunda checagem síncrona (`matchMedia`) que aplica a classe `.perf-mode` no `<html>` — evita "pintar pesado e depois trocar para leve" um instante depois.
+- **Lazy loading por seção, não por rota.** Como o site é uma SPA de página única (sem client-side router), `React.lazy` foi aplicado diretamente a cada seção abaixo do Hero — o bundle principal caiu de ~328KB para ~290KB (gzip: 101KB → 94KB), com 8 chunks adicionais pequenos (0,5KB a 6,4KB cada) carregados sob demanda.
+- **Ícones do PWA gerados via Chrome headless**, não por um gerador de imagem externo: HTML com o monograma "CA" em gradiente (mesmo estilo do logo do header) renderizado e capturado em screenshot nos tamanhos exigidos (192, 512, 512 maskable, 180 apple-touch-icon) — sem dependências novas de build de imagem.
+- **`vite-plugin-pwa` com `generateSW` + `registerType: 'autoUpdate'`**: manifest e service worker gerados automaticamente no build, sem exigir escrita manual de um `manifest.webmanifest` ou de um SW customizado. `skipWaiting`/`clientsClaim` habilitados para o novo SW assumir controle imediatamente a cada deploy (evita usuário preso em versão antiga).
+
+### 7.4 Validação (headless, sem acesso a device físico)
+
+- Build de produção validado (`npm run build`, sem erros).
+- `npm run preview` + Chrome headless: confirmado via dump do DOM que o `<canvas>` do `ParticleBackground` **não é montado** em viewport mobile (390×844) e que a classe `.perf-mode` aparece no `<html>` só nesse caso — no desktop (1440×900) o canvas aparece normalmente e `.perf-mode` está ausente.
+- Checagem de overflow horizontal via script injetado temporariamente no build (`document.documentElement.scrollWidth` vs `clientWidth`): **sem overflow em nenhum teste**, incluindo nos 4 breakpoints mobile testados (320, 375, 390, 414px de largura solicitada).
+  - Observação técnica: o Chrome headless nesta máquina Windows aplica um piso mínimo de janela (~490px) independente do `--window-size` pedido abaixo desse valor — uma limitação da ferramenta de teste (ausência de emulação de dispositivo via CDP/Puppeteer), não do site. Ainda assim, como `scrollWidth` nunca excedeu `clientWidth` em nenhuma medição (inclusive nesse piso de ~490px), e todos os elementos decorativos de background foram revisados manualmente (ancorados a bordas ou contidos por `overflow-hidden` no pai), a ausência de overflow horizontal tem boa confiança — recomenda-se uma checagem final num dispositivo real ou no modo responsivo do DevTools do Chrome (que emula largura corretamente) antes de considerar 100% encerrado.
+- Manifest, ícones e meta tags de iOS conferidos diretamente no HTML/JSON gerados em `dist/`.
+
+---
+
+*Seção 7 registrada em 04/07/2026 às 16:23 (horário local), ao final da sessão de otimização mobile e PWA (v1.0.1).*

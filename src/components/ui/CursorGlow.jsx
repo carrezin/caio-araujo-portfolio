@@ -1,16 +1,15 @@
-import React, { useRef, useEffect, useState } from 'react'
+import React, { useRef, useEffect } from 'react'
+import useIsMobile from '../../hooks/useIsMobile'
 
-// Luz global que segue o cursor. Dois modos:
-// - follow: desktop, rAF + lerp + translate3d (fluido, sem re-render do React)
-// - drift:  telas touch (sem cursor), animação CSS lenta vagando pela tela
+// Luz global que segue o cursor — efeito exclusivo de desktop (não existe
+// cursor real em touch). Em mobile o componente não renderiza nada: sem
+// elemento fixo, sem listener, sem loop de animação alternativo.
 const CursorGlow = () => {
+  const isMobile = useIsMobile()
   const glowRef = useRef(null)
-  const [mode] = useState(() =>
-    window.matchMedia('(pointer: coarse)').matches ? 'drift' : 'follow'
-  )
 
   useEffect(() => {
-    if (mode !== 'follow') return
+    if (isMobile) return
     const glow = glowRef.current
     if (!glow) return
 
@@ -39,15 +38,11 @@ const CursorGlow = () => {
       window.removeEventListener('mousemove', handleMouseMove)
       cancelAnimationFrame(frameId)
     }
-  }, [mode])
+  }, [isMobile])
 
-  return (
-    <div
-      ref={glowRef}
-      aria-hidden="true"
-      className={`cursor-glow ${mode === 'drift' ? 'cursor-glow--drift' : ''}`}
-    />
-  )
+  if (isMobile) return null
+
+  return <div ref={glowRef} aria-hidden="true" className="cursor-glow" />
 }
 
 export default CursorGlow

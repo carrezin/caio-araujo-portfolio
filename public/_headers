@@ -1,0 +1,25 @@
+# Cloudflare Pages — regras de cache para assets estáticos.
+# Docs: https://developers.cloudflare.com/pages/configuration/headers/
+
+# Assets com hash no nome (JS/CSS gerados pelo Vite) podem ser cacheados
+# agressivamente: qualquer mudança de conteúdo gera um nome de arquivo novo.
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Ícones do PWA raramente mudam, mas não precisam ser "immutable".
+/icons/*
+  Cache-Control: public, max-age=604800
+
+# O service worker e o manifest NUNCA podem ficar em cache do navegador/CDN —
+# senão o autoUpdate do PWA não consegue detectar novas versões após o deploy.
+/sw.js
+  Cache-Control: no-cache
+/manifest.webmanifest
+  Cache-Control: no-cache
+
+# HTML sempre revalidado, para garantir que o usuário sempre pegue as
+# referências mais recentes de JS/CSS/manifest após um novo deploy.
+/index.html
+  Cache-Control: no-cache
+/
+  Cache-Control: no-cache

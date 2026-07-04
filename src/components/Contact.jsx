@@ -57,8 +57,8 @@ const Contact = () => {
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-accent-blue/10 via-transparent to-transparent" />
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,_var(--tw-gradient-stops))] from-accent-purple/10 via-transparent to-transparent" />
         <div className="grid-overlay absolute inset-0" />
-        <div className="absolute top-20 left-20 w-72 h-72 bg-accent-blue/20 rounded-full blur-[128px] animate-pulse-slow" />
-        <div className="absolute bottom-20 right-20 w-96 h-96 bg-accent-purple/15 rounded-full blur-[128px] animate-pulse-slow" />
+        <div className="absolute top-20 left-20 w-32 h-32 md:w-72 md:h-72 bg-accent-blue/20 rounded-full blur-[50px] md:blur-[128px] animate-pulse-slow" />
+        <div className="absolute bottom-20 right-20 w-40 h-40 md:w-96 md:h-96 bg-accent-purple/15 rounded-full blur-[50px] md:blur-[128px] animate-pulse-slow" />
       </div>
 
       <div className="relative z-10 max-w-5xl mx-auto">

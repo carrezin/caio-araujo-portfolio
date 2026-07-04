@@ -19,7 +19,7 @@ const About = () => {
 
   return (
   <section id="sobre" className="section-padding relative scroll-mt-24">
-    <div className="absolute top-1/2 left-0 w-[350px] h-[350px] bg-accent-purple/10 rounded-full blur-[120px] -translate-y-1/2" />
+    <div className="absolute top-1/2 left-0 w-[160px] h-[160px] md:w-[350px] md:h-[350px] bg-accent-purple/10 rounded-full blur-[50px] md:blur-[120px] -translate-y-1/2" />
 
     <div className="max-w-6xl mx-auto relative">
       <SectionTitle badge="Sobre mim" title="Tecnologia com visão de negócio" />

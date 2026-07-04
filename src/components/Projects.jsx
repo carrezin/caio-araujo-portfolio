@@ -7,7 +7,7 @@ import { projects } from '../data/projects'
 
 const Projects = () => (
   <section id="projetos" className="section-padding relative scroll-mt-24">
-    <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-accent-blue/10 rounded-full blur-[130px]" />
+    <div className="absolute top-0 right-0 w-[180px] h-[180px] md:w-[400px] md:h-[400px] bg-accent-blue/10 rounded-full blur-[55px] md:blur-[130px]" />
 
     <div className="max-w-7xl mx-auto relative">
       <SectionTitle

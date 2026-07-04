@@ -6,7 +6,7 @@ import { techGroups } from '../data/techs'
 
 const TechStack = () => (
   <section id="tecnologias" className="section-padding relative scroll-mt-24">
-    <div className="absolute top-1/3 right-0 w-[350px] h-[350px] bg-accent-purple/10 rounded-full blur-[120px]" />
+    <div className="absolute top-1/3 right-0 w-[160px] h-[160px] md:w-[350px] md:h-[350px] bg-accent-purple/10 rounded-full blur-[50px] md:blur-[120px]" />
 
     <div className="max-w-6xl mx-auto relative">
       <SectionTitle
