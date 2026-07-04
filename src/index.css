@@ -1,0 +1,287 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============================================================
+   TOKENS DE TEMA — claro (:root) e escuro (.dark)
+   Cores de superfície/texto como "R G B" para uso com alpha
+   no Tailwind; efeitos de vidro como rgba prontos.
+   ============================================================ */
+:root {
+  color-scheme: light;
+
+  --c-bg0: 244 246 251;
+  --c-bg1: 233 238 248;
+  --c-bg2: 255 255 255;
+
+  --c-ink1: 15 23 42;
+  --c-ink2: 51 65 85;
+  --c-ink3: 71 85 105;
+  --c-ink4: 100 116 139;
+
+  /* Vidro / Liquid Glass */
+  --glass-bg: rgba(255, 255, 255, 0.55);
+  --glass-bg-strong: rgba(255, 255, 255, 0.75);
+  --glass-brd: rgba(15, 23, 42, 0.1);
+  --glass-brd-strong: rgba(15, 23, 42, 0.16);
+  --glass-shine: rgba(255, 255, 255, 0.95);
+  --glass-shadow: rgba(15, 23, 42, 0.14);
+  --lg-hi: rgba(255, 255, 255, 0.85);
+  --lg-lo: rgba(255, 255, 255, 0.45);
+  --lg-lo2: rgba(255, 255, 255, 0.65);
+  --lg-depth: rgba(15, 23, 42, 0.12);
+
+  --badge-ink: #1d4ed8;
+  --grid-line: rgba(15, 23, 42, 0.08);
+  --cursor-glow: radial-gradient(circle, rgba(59, 130, 246, 0.28), transparent 65%);
+  --scroll-track: #e9eef8;
+  --scroll-thumb: #c3cde0;
+  --scroll-thumb-hover: #a8b5cf;
+}
+
+.dark {
+  color-scheme: dark;
+
+  --c-bg0: 5 6 10;
+  --c-bg1: 10 12 20;
+  --c-bg2: 17 20 31;
+
+  --c-ink1: 241 245 249;
+  --c-ink2: 226 232 240;
+  --c-ink3: 148 163 184;
+  --c-ink4: 100 116 139;
+
+  --glass-bg: rgba(255, 255, 255, 0.05);
+  --glass-bg-strong: rgba(255, 255, 255, 0.09);
+  --glass-brd: rgba(255, 255, 255, 0.1);
+  --glass-brd-strong: rgba(255, 255, 255, 0.22);
+  --glass-shine: rgba(255, 255, 255, 0.28);
+  --glass-shadow: rgba(0, 0, 0, 0.5);
+  --lg-hi: rgba(255, 255, 255, 0.12);
+  --lg-lo: rgba(255, 255, 255, 0.03);
+  --lg-lo2: rgba(255, 255, 255, 0.07);
+  --lg-depth: rgba(2, 6, 23, 0.55);
+
+  --badge-ink: #67e8f9;
+  --grid-line: rgba(30, 41, 59, 0.5);
+  --cursor-glow: radial-gradient(circle, rgba(34, 211, 238, 0.3), transparent 65%);
+  --scroll-track: #0a0c14;
+  --scroll-thumb: #1e2333;
+  --scroll-thumb-hover: #2a3147;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* Sem rolagem lateral em nenhuma hipótese (clip não cria contexto de scroll) */
+html,
+body {
+  overflow-x: clip;
+}
+
+body {
+  @apply bg-base-950 text-ink-2 font-sans antialiased;
+  transition: background-color 0.35s ease, color 0.35s ease;
+}
+
+::selection {
+  @apply bg-accent-cyan/30;
+  color: rgb(var(--c-ink1));
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: var(--scroll-track);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--scroll-thumb);
+  border-radius: 8px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--scroll-thumb-hover);
+}
+
+@layer components {
+  /* ---------- Superfícies de vidro ---------- */
+  .glass-card {
+    @apply backdrop-blur-xl rounded-2xl;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-brd);
+  }
+
+  .glass-card-hover {
+    @apply transition-all duration-500 hover:-translate-y-1;
+  }
+  .glass-card-hover:hover {
+    background: var(--glass-bg-strong);
+    border-color: var(--glass-brd-strong);
+  }
+
+  /* Chip pequeno (tags de projetos, badges de tecnologia) */
+  .chip-glass {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-brd);
+  }
+
+  /* Liquid Glass: gradiente de vidro + brilho interno superior +
+     profundidade inferior + sombra suave. Usar em botões e controles. */
+  .liquid-glass {
+    background: linear-gradient(165deg, var(--lg-hi) 0%, var(--lg-lo) 55%, var(--lg-lo2) 100%);
+    backdrop-filter: blur(16px) saturate(140%);
+    -webkit-backdrop-filter: blur(16px) saturate(140%);
+    border: 1px solid var(--glass-brd-strong);
+    box-shadow:
+      inset 0 1px 0 0 var(--glass-shine),
+      inset 0 -10px 20px -14px var(--lg-depth),
+      0 10px 30px -14px var(--glass-shadow);
+  }
+
+  /* Botão circular de vidro (toggle de tema, widget de contato) */
+  .icon-btn-glass {
+    @apply inline-flex items-center justify-center rounded-full transition-all duration-300 hover:scale-105 active:scale-95;
+    background: linear-gradient(165deg, var(--lg-hi) 0%, var(--lg-lo) 55%, var(--lg-lo2) 100%);
+    backdrop-filter: blur(16px) saturate(140%);
+    -webkit-backdrop-filter: blur(16px) saturate(140%);
+    border: 1px solid var(--glass-brd-strong);
+    box-shadow:
+      inset 0 1px 0 0 var(--glass-shine),
+      0 8px 24px -12px var(--glass-shadow);
+    color: rgb(var(--c-ink1));
+  }
+
+  /* Pills da navegação (desktop e menu mobile) */
+  .nav-pill {
+    @apply rounded-lg px-3 py-1.5 text-sm font-semibold transition-all duration-300;
+    border: 1px solid transparent;
+    color: rgb(var(--c-ink2));
+  }
+  .nav-pill:hover {
+    color: rgb(var(--c-ink1));
+    background: var(--glass-bg);
+  }
+  .nav-pill--active {
+    color: rgb(var(--c-ink1));
+    background: var(--glass-bg-strong);
+    border-color: rgba(34, 211, 238, 0.35);
+    box-shadow: inset 0 1px 0 var(--glass-shine);
+  }
+
+  /* Badge de seção ("Sobre mim", "Portfólio"...) — contraste garantido nos dois temas */
+  .badge-glass {
+    @apply inline-block px-4 py-1.5 text-sm font-semibold rounded-full backdrop-blur-md;
+    background: linear-gradient(165deg, var(--lg-hi), var(--lg-lo2));
+    border: 1px solid var(--glass-brd-strong);
+    box-shadow: inset 0 1px 0 var(--glass-shine);
+    color: var(--badge-ink);
+  }
+
+  /* Grid de fundo da seção de contato */
+  .grid-overlay {
+    background-image:
+      linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
+    background-size: 4rem 4rem;
+    mask-image: radial-gradient(ellipse 60% 50% at 50% 40%, #000 60%, transparent 100%);
+    -webkit-mask-image: radial-gradient(ellipse 60% 50% at 50% 40%, #000 60%, transparent 100%);
+  }
+
+  /* Luz que segue o cursor (global). Modo drift = telas touch. */
+  .cursor-glow {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 20rem;
+    height: 20rem;
+    border-radius: 9999px;
+    pointer-events: none;
+    z-index: 30;
+    opacity: 0.15;
+    filter: blur(80px);
+    background: var(--cursor-glow);
+    will-change: transform;
+  }
+  .cursor-glow--drift {
+    opacity: 0.1;
+    animation: glow-drift 30s ease-in-out infinite;
+  }
+
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-accent-blue via-accent-cyan to-accent-purple;
+  }
+
+  /* Título com gradiente que se adapta ao tema (antes era branco fixo) */
+  .text-gradient-white {
+    @apply bg-clip-text text-transparent;
+    background-image: linear-gradient(to bottom, rgb(var(--c-ink1)), rgb(var(--c-ink3)));
+  }
+
+  .section-padding {
+    @apply py-24 px-6 md:px-10;
+  }
+
+  /* Anel de foco consistente para navegação por teclado */
+  .focus-ring {
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-cyan/70 focus-visible:ring-offset-2 focus-visible:ring-offset-base-950;
+  }
+
+  /* Botão primário: gradiente translúcido + acabamento de vidro */
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl font-semibold text-white
+      transition-all duration-300 hover:scale-[1.03] active:scale-[0.98]
+      focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-cyan/70 focus-visible:ring-offset-2 focus-visible:ring-offset-base-950;
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.92), rgba(34, 211, 238, 0.88));
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.28);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.35),
+      0 8px 24px -8px rgba(34, 211, 238, 0.5);
+  }
+  .btn-primary:hover {
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.4),
+      0 12px 32px -8px rgba(34, 211, 238, 0.65);
+  }
+
+  .btn-primary-sm {
+    @apply px-5 py-2.5 text-sm;
+  }
+
+  /* Botão secundário em Liquid Glass */
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl font-semibold
+      transition-all duration-300 hover:scale-[1.03] active:scale-[0.98]
+      focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-cyan/70 focus-visible:ring-offset-2 focus-visible:ring-offset-base-950;
+    color: rgb(var(--c-ink1));
+    background: linear-gradient(165deg, var(--lg-hi) 0%, var(--lg-lo) 55%, var(--lg-lo2) 100%);
+    backdrop-filter: blur(16px) saturate(140%);
+    -webkit-backdrop-filter: blur(16px) saturate(140%);
+    border: 1px solid var(--glass-brd-strong);
+    box-shadow:
+      inset 0 1px 0 0 var(--glass-shine),
+      0 10px 30px -14px var(--glass-shadow);
+  }
+  .btn-secondary:hover {
+    background: var(--glass-bg-strong);
+    border-color: rgba(34, 211, 238, 0.35);
+  }
+}
+
+@keyframes glow-drift {
+  0%,
+  100% {
+    transform: translate3d(5vw, 65vh, 0);
+  }
+  25% {
+    transform: translate3d(65vw, 15vh, 0);
+  }
+  50% {
+    transform: translate3d(80vw, 70vh, 0);
+  }
+  75% {
+    transform: translate3d(25vw, 30vh, 0);
+  }
+}
