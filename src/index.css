@@ -105,6 +105,31 @@ body {
 }
 
 @layer components {
+  /* ---------- Header: respeita a safe area (notch/ilha dinâmica) ----------
+     env(safe-area-inset-top, 0px) resolve para 0px em qualquer aparelho sem
+     notch (desktop, Android, iPhones mais antigos), então isso não cria
+     espaço extra fora do iOS com recorte. O status bar do PWA no iOS é
+     "black-translucent" (conteúdo passa por baixo dela de propósito, para o
+     header manter o efeito de vidro/blur até o topo da tela) — por isso o
+     header precisa desse padding extra para o texto/botões não ficarem
+     colados ou escondidos atrás do notch. */
+  .header-pad {
+    padding-top: calc(env(safe-area-inset-top, 0px) + 0.75rem);
+    padding-bottom: 0.75rem;
+  }
+  .header-pad-top {
+    padding-top: calc(env(safe-area-inset-top, 0px) + 1.25rem);
+    padding-bottom: 1.25rem;
+  }
+  /* Um pouco de respiro a mais no modo instalado (PWA/standalone): sem a
+     barra de endereço do Safari por perto, o header fica com pouca folga. */
+  @media (display-mode: standalone) {
+    .header-pad,
+    .header-pad-top {
+      padding-top: calc(env(safe-area-inset-top, 0px) + 1rem);
+    }
+  }
+
   /* ---------- Superfícies de vidro ---------- */
   .glass-card {
     @apply backdrop-blur-xl rounded-2xl;

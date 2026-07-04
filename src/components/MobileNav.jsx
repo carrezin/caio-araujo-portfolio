@@ -16,7 +16,7 @@ const NAV_ITEMS = [
 const NAV_IDS = NAV_ITEMS.map((item) => item.id)
 
 const MobileNav = () => {
-  const activeId = useActiveSection(NAV_IDS)
+  const [activeId, scrollToSection] = useActiveSection(NAV_IDS)
 
   return (
     <motion.nav
@@ -34,6 +34,10 @@ const MobileNav = () => {
             <a
               key={item.id}
               href={`#${item.id}`}
+              onClick={(e) => {
+                e.preventDefault()
+                scrollToSection(item.id)
+              }}
               aria-current={isActive ? 'page' : undefined}
               className="focus-ring relative flex flex-1 flex-col items-center justify-center gap-1 py-2.5 rounded-xl transition-colors duration-300"
             >

@@ -4,6 +4,23 @@ Todas as mudanças notáveis deste projeto são documentadas neste arquivo.
 
 O formato segue [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/) e o projeto usa [Versionamento Semântico](https://semver.org/lang/pt-BR/).
 
+## [1.0.2] - 2026-07-04
+
+### Corrigido
+
+- Corrigido estado ativo do menu de navegação ao clicar e ao rolar a página.
+- Corrigido comportamento do menu ativo após lazy loading das seções.
+- Ajustado header/topbar para respeitar safe area em iPhones com notch no modo PWA.
+- Melhorada usabilidade do header em modo standalone/iOS.
+- Mantida compatibilidade visual com desktop e Android.
+
+### Detalhes técnicos
+
+- `useActiveSection`: o `IntersectionObserver` só observava as seções já presentes no DOM no momento do mount. Como a maioria das seções carrega via `React.lazy`/`Suspense`, elas ainda não existiam nesse momento — na prática, só a seção "Início" ficava sob observação, e o menu nunca mais mudava. Um `MutationObserver` agora detecta quando cada seção lazy é montada e a registra no observer assim que aparece.
+- A seção ativa passou a ser recalculada pela posição geométrica atual de cada seção (`getBoundingClientRect`) a cada notificação do `IntersectionObserver`, em vez de depender de um histórico acumulado de entradas/saídas — evita que a seção errada fique "presa" como ativa caso alguma notificação de saída seja perdida numa rolagem longa.
+- Clicar num item do menu agora chama `scrollToSection`, que marca a seção como ativa imediatamente (feedback instantâneo) e rola até ela via `scrollIntoView`; a marcação manual expira sozinha depois de ~900ms, devolvendo o controle ao observer.
+- Header: `padding-top` agora soma `env(safe-area-inset-top, 0px)` (classes `.header-pad`/`.header-pad-top`), com um pequeno acréscimo extra em `@media (display-mode: standalone)`. Como o valor da safe area é `0px` em qualquer aparelho sem notch, desktop e Android não são afetados.
+
 ## [1.0.1] - 2026-07-04
 
 ### Adicionado

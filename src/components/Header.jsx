@@ -19,7 +19,7 @@ const NAV_IDS = NAV_LINKS.map((link) => link.id)
 const Header = () => {
   const [scrolled, setScrolled] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
-  const activeId = useActiveSection(NAV_IDS)
+  const [activeId, scrollToSection] = useActiveSection(NAV_IDS)
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20)
@@ -34,8 +34,8 @@ const Header = () => {
       transition={{ duration: 0.6, ease: 'easeOut' }}
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
         scrolled
-          ? 'bg-base-950/85 backdrop-blur-xl border-b border-ink-1/10 py-3 shadow-lg shadow-black/10'
-          : 'bg-gradient-to-b from-base-950/80 via-base-950/35 to-transparent py-5'
+          ? 'header-pad bg-base-950/85 backdrop-blur-xl border-b border-ink-1/10 shadow-lg shadow-black/10'
+          : 'header-pad-top bg-gradient-to-b from-base-950/80 via-base-950/35 to-transparent'
       }`}
     >
       <nav className="max-w-7xl mx-auto px-6 md:px-10 flex items-center justify-between gap-3">
@@ -52,6 +52,10 @@ const Header = () => {
               <li key={link.href}>
                 <a
                   href={link.href}
+                  onClick={(e) => {
+                    e.preventDefault()
+                    scrollToSection(link.id)
+                  }}
                   aria-current={isActive ? 'page' : undefined}
                   className={`focus-ring nav-pill ${isActive ? 'nav-pill--active' : ''}`}
                 >
@@ -104,7 +108,11 @@ const Header = () => {
                   <li key={link.href}>
                     <a
                       href={link.href}
-                      onClick={() => setMenuOpen(false)}
+                      onClick={(e) => {
+                        e.preventDefault()
+                        scrollToSection(link.id)
+                        setMenuOpen(false)
+                      }}
                       aria-current={isActive ? 'page' : undefined}
                       className={`focus-ring nav-pill block py-3 ${isActive ? 'nav-pill--active' : ''}`}
                     >
