@@ -1,16 +1,18 @@
 import React from 'react'
 import { motion } from 'framer-motion'
-import { Home, User, Briefcase, Wrench, MessageCircle } from 'lucide-react'
+import { Home, User, Briefcase, Wrench, Code2, MessageCircle } from 'lucide-react'
 import useActiveSection from '../hooks/useActiveSection'
 import { useLanguage } from '../i18n/LanguageContext'
 
 // Navegação inferior fixa, pensada para uso com o polegar em telas de toque.
-// Some em telas >= lg, onde o Header já oferece a navegação completa.
+// Único sistema de navegação no mobile (o header não tem mais menu
+// hambúrguer) — por isso inclui as mesmas 6 seções do menu desktop.
 const NAV_ITEMS = [
   { id: 'inicio', icon: Home },
   { id: 'sobre', icon: User },
   { id: 'projetos', icon: Briefcase },
   { id: 'servicos', icon: Wrench },
+  { id: 'tecnologias', icon: Code2 },
   { id: 'contato', icon: MessageCircle },
 ]
 
@@ -29,10 +31,14 @@ const MobileNav = () => {
       style={{ paddingBottom: 'max(0.625rem, env(safe-area-inset-bottom))' }}
       aria-label={t.a11y.mobileNavLabel}
     >
-      <div className="liquid-glass flex items-center justify-around gap-1 max-w-md mx-auto rounded-2xl">
+      {/* overflow-x-auto: com 6 itens, telas muito estreitas (320px) rolam
+          horizontalmente em vez de espremer ícone/texto até ficar ilegível.
+          Sem larguras fixas: cada item usa o espaço que o conteúdo pede
+          (shrink-0), então isso só ativa quando realmente não cabe. */}
+      <div className="liquid-glass flex items-center gap-1 max-w-md mx-auto rounded-2xl overflow-x-auto">
         {NAV_ITEMS.map((item) => {
           const isActive = activeId === item.id
-          const label = t.mobileNav[item.id]
+          const label = t.nav[item.id]
           return (
             <a
               key={item.id}
@@ -42,7 +48,7 @@ const MobileNav = () => {
                 scrollToSection(item.id)
               }}
               aria-current={isActive ? 'page' : undefined}
-              className="focus-ring relative flex flex-1 flex-col items-center justify-center gap-1 py-2.5 rounded-xl transition-colors duration-300"
+              className="focus-ring relative flex-1 shrink-0 flex flex-col items-center justify-center gap-1 py-2.5 px-2 rounded-xl transition-colors duration-300"
             >
               {isActive && (
                 <motion.span
@@ -57,7 +63,7 @@ const MobileNav = () => {
                 }`}
               />
               <span
-                className={`relative z-10 text-[10px] font-semibold transition-colors duration-300 ${
+                className={`relative z-10 text-[10px] font-semibold whitespace-nowrap transition-colors duration-300 ${
                   isActive ? 'text-ink-1' : 'text-ink-3'
                 }`}
               >

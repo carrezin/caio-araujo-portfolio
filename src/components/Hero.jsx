@@ -3,7 +3,9 @@ import { motion } from 'framer-motion'
 import { ArrowRight, Sparkles, TrendingUp, Activity, CircleDollarSign } from 'lucide-react'
 import ParticleBackground from './ui/ParticleBackground'
 import HeroBackgroundLite from './ui/HeroBackgroundLite'
+import Typewriter from './ui/Typewriter'
 import useIsMobile from '../hooks/useIsMobile'
+import useReducedMotion from '../hooks/useReducedMotion'
 import { useLanguage } from '../i18n/LanguageContext'
 
 const FLOATING_POSITIONS = [
@@ -22,6 +24,7 @@ const MOCKUP_COLORS = ['text-accent-cyan', 'text-accent-purple', 'text-accent-go
 const Hero = () => {
   const { t } = useLanguage()
   const isMobile = useIsMobile()
+  const reducedMotion = useReducedMotion()
 
   // Em mobile, o Hero precisa aparecer o mais rápido possível: sem stagger
   // longo, sem delays acumulados atrasando o conteúdo principal (LCP).
@@ -81,11 +84,23 @@ const Hero = () => {
           variants={fadeUp}
           initial="hidden"
           animate="visible"
-          className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tighter mb-6 text-gradient-white"
+          // min-h em "em" (relativo ao próprio font-size do h1, que muda por
+          // breakpoint) reserva espaço para o número de linhas esperado em
+          // cada tamanho de tela, para as frases do typewriter não empurrarem
+          // os botões/parágrafo abaixo enquanto digitam/apagam. No mobile
+          // (texto menor, mais quebras) reserva mais linhas; no desktop,
+          // ~3 linhas — igual à composição original.
+          className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tighter mb-6 text-gradient-white min-h-[4.5em] md:min-h-[3.05em] lg:min-h-[3.05em]"
         >
           {t.hero.titlePrefix}
-          <span className="text-gradient">{t.hero.titleHighlight}</span>
-          {t.hero.titleSuffix}
+          {/* aria-label estável (não muda a cada letra digitada) — leitor de
+              tela ouve a frase completa de uma vez; o texto animado em si é
+              puramente visual (aria-hidden). */}
+          <span className="text-gradient" aria-label={t.hero.typewriterWords[0]}>
+            <span aria-hidden="true">
+              <Typewriter words={t.hero.typewriterWords} reducedMotion={reducedMotion} />
+            </span>
+          </span>
         </motion.h1>
 
         <motion.p

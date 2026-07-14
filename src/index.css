@@ -37,6 +37,11 @@
   --scroll-track: #e9eef8;
   --scroll-thumb: #c3cde0;
   --scroll-thumb-hover: #a8b5cf;
+
+  /* Fundo sólido (não-translúcido) para popovers/menus suspensos que
+     precisam de contraste garantido — texto nunca "vaza" o conteúdo atrás. */
+  --dropdown-bg: rgba(248, 249, 252, 0.97);
+  --dropdown-border: rgba(15, 23, 42, 0.12);
 }
 
 .dark {
@@ -68,6 +73,10 @@
   --scroll-track: #0a0c14;
   --scroll-thumb: #1e2333;
   --scroll-thumb-hover: #2a3147;
+
+  /* Fundo sólido (não-translúcido) para popovers/menus suspensos */
+  --dropdown-bg: rgba(15, 15, 20, 0.96);
+  --dropdown-border: rgba(255, 255, 255, 0.14);
 }
 
 html {
@@ -164,6 +173,20 @@ body {
       0 10px 30px -14px var(--glass-shadow);
   }
 
+  /* Popover/menu suspenso (ex.: seletor de idioma): precisa de contraste
+     garantido para o texto da lista, então usa um fundo praticamente sólido
+     em vez do vidro translúcido do resto do site — evita o texto/conteúdo
+     da página "vazando" por trás do menu. */
+  .dropdown-glass {
+    background: var(--dropdown-bg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--dropdown-border);
+    box-shadow:
+      inset 0 1px 0 0 var(--glass-shine),
+      0 16px 40px -12px rgba(0, 0, 0, 0.45);
+  }
+
   /* Botão circular de vidro (toggle de tema, widget de contato) */
   .icon-btn-glass {
     @apply inline-flex items-center justify-center rounded-full transition-all duration-300 hover:scale-105 active:scale-95;
@@ -258,6 +281,20 @@ body {
     @apply bg-clip-text text-transparent bg-gradient-to-r from-accent-blue via-accent-cyan to-accent-purple;
   }
 
+  /* Cursor do Typewriter — pisca via CSS (compositor), sem setInterval em JS.
+     Cor sólida ciano (compatível com o gradiente azul/roxo do texto ao lado). */
+  .typewriter-cursor {
+    display: inline-block;
+    margin-left: 0.05em;
+    color: #22d3ee; /* accent-cyan — mesma família do gradiente azul/ciano/roxo do texto */
+    animation: typewriter-blink 1s step-end infinite;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .typewriter-cursor {
+      animation: none;
+    }
+  }
+
   /* Título com gradiente que se adapta ao tema (antes era branco fixo) */
   .text-gradient-white {
     @apply bg-clip-text text-transparent;
@@ -313,5 +350,16 @@ body {
   .btn-secondary:hover {
     background: var(--glass-bg-strong);
     border-color: rgba(34, 211, 238, 0.35);
+  }
+}
+
+@keyframes typewriter-blink {
+  0%,
+  50% {
+    opacity: 1;
+  }
+  50.01%,
+  100% {
+    opacity: 0;
   }
 }

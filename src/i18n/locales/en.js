@@ -38,6 +38,15 @@ export default {
     titlePrefix: 'I turn manual processes into ',
     titleHighlight: 'smart digital solutions',
     titleSuffix: '.',
+    // Phrases cycled by the typewriter effect (blue portion of the title) —
+    // each one already includes the trailing period.
+    typewriterWords: [
+      'smart digital solutions.',
+      'automations that drive results.',
+      'integrations between systems.',
+      'dashboards for better decisions.',
+      'faster, safer processes.',
+    ],
     subtitle:
       "I'm Caio Araujo, an IT Analyst and Automation Developer with experience in CRM, integrations, APIs, dashboards and internal systems for corporate environments.",
     ctaProjects: 'View projects',

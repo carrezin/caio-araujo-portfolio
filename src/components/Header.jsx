@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
-import { Menu, X, MessageCircle } from 'lucide-react'
+import { motion } from 'framer-motion'
+import { MessageCircle } from 'lucide-react'
 import { WHATSAPP_URL } from '../config/contact'
 import useActiveSection from '../hooks/useActiveSection'
 import { useLanguage } from '../i18n/LanguageContext'
@@ -9,10 +9,12 @@ import LanguageSwitcher from './ui/LanguageSwitcher'
 
 const NAV_IDS = ['inicio', 'sobre', 'projetos', 'servicos', 'tecnologias', 'contato']
 
+// No mobile, a navegação por seção vive só na barra inferior (MobileNav) —
+// o header aqui mantém apenas identidade (logo), idioma e tema, evitando um
+// segundo sistema de navegação redundante (removido: menu hambúrguer).
 const Header = () => {
   const { t } = useLanguage()
   const [scrolled, setScrolled] = useState(false)
-  const [menuOpen, setMenuOpen] = useState(false)
   const [activeId, scrollToSection] = useActiveSection(NAV_IDS)
 
   const navLinks = NAV_IDS.map((id) => ({ id, href: `#${id}`, label: t.nav[id] }))
@@ -75,64 +77,8 @@ const Header = () => {
             <MessageCircle className="w-4 h-4" />
             {t.nav.cta}
           </a>
-
-          {/* Mobile toggle */}
-          <button
-            onClick={() => setMenuOpen(!menuOpen)}
-            className="focus-ring icon-btn-glass lg:hidden w-10 h-10"
-            aria-label={menuOpen ? t.a11y.closeMenu : t.a11y.openMenu}
-            aria-expanded={menuOpen}
-          >
-            {menuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-          </button>
         </div>
       </nav>
-
-      {/* Mobile menu */}
-      <AnimatePresence>
-        {menuOpen && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.3 }}
-            className="lg:hidden overflow-hidden bg-base-950/95 backdrop-blur-xl border-b border-ink-1/10"
-          >
-            <ul className="px-6 py-4 space-y-1">
-              {navLinks.map((link) => {
-                const isActive = activeId === link.id
-                return (
-                  <li key={link.href}>
-                    <a
-                      href={link.href}
-                      onClick={(e) => {
-                        e.preventDefault()
-                        scrollToSection(link.id)
-                        setMenuOpen(false)
-                      }}
-                      aria-current={isActive ? 'page' : undefined}
-                      className={`focus-ring nav-pill block py-3 ${isActive ? 'nav-pill--active' : ''}`}
-                    >
-                      {link.label}
-                    </a>
-                  </li>
-                )
-              })}
-              <li className="pt-2 pb-3">
-                <a
-                  href={WHATSAPP_URL}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="btn-primary w-full"
-                >
-                  <MessageCircle className="w-4 h-4" />
-                  {t.nav.cta}
-                </a>
-              </li>
-            </ul>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </motion.header>
   )
 }

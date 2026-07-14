@@ -54,7 +54,7 @@ const LanguageSwitcher = () => {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 8, scale: 0.95 }}
             transition={{ duration: 0.18, ease: 'easeOut' }}
-            className="liquid-glass absolute right-0 mt-2 w-44 rounded-2xl p-1.5 z-50"
+            className="dropdown-glass absolute right-0 mt-2 w-44 rounded-2xl p-1.5 z-[70]"
           >
             {languages.map((option) => {
               const isActive = option.code === lang

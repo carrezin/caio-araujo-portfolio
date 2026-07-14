@@ -38,6 +38,15 @@ export default {
     titlePrefix: 'Transformo processos manuais em ',
     titleHighlight: 'soluções digitais inteligentes',
     titleSuffix: '.',
+    // Frases alternadas no efeito de digitação (trecho azul do título) —
+    // cada uma já inclui o ponto final.
+    typewriterWords: [
+      'soluções digitais inteligentes.',
+      'automações que geram resultados.',
+      'integrações entre sistemas.',
+      'dashboards para decisões melhores.',
+      'processos mais rápidos e seguros.',
+    ],
     subtitle:
       'Sou Caio Araujo, Analista de TI e Desenvolvedor de Automações com experiência em CRM, integrações, APIs, dashboards e sistemas internos para ambientes corporativos.',
     ctaProjects: 'Ver projetos',
