@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { MessageCircle, Instagram, Github, Linkedin } from 'lucide-react'
 import { WHATSAPP_URL, INSTAGRAM_URL, GITHUB_URL, LINKEDIN_URL } from '../config/contact'
+import { useLanguage } from '../i18n/LanguageContext'
 
 const CHANNELS = [
   { name: 'WhatsApp', icon: MessageCircle, href: WHATSAPP_URL, color: 'text-green-500 dark:text-green-400' },
@@ -14,6 +15,7 @@ const CHANNELS = [
 // e ícone alternando entre os canais. Toque/clique abre um menu com os links.
 // No mobile fica acima da barra de navegação inferior (safe-area incluída).
 const ContactWidget = () => {
+  const { t } = useLanguage()
   const [index, setIndex] = useState(0)
   const [open, setOpen] = useState(false)
 
@@ -32,7 +34,7 @@ const ContactWidget = () => {
         <button
           className="fixed inset-0 z-40 cursor-default"
           onClick={() => setOpen(false)}
-          aria-label="Fechar menu de contato"
+          aria-label={t.a11y.closeContactOverlay}
           tabIndex={-1}
         />
       )}
@@ -72,10 +74,7 @@ const ContactWidget = () => {
         {/* Botão principal */}
         <div className="relative">
           {/* Luz de fundo fraca */}
-          <span
-            className="absolute -inset-2 rounded-full bg-accent-cyan/15 blur-xl"
-            aria-hidden="true"
-          />
+          <span className="absolute -inset-2 rounded-full bg-accent-cyan/15 blur-xl" aria-hidden="true" />
           {/* Anel de pulso */}
           <span
             className="absolute inset-0 rounded-full border border-accent-cyan/50 animate-pulse-ring"
@@ -84,7 +83,7 @@ const ContactWidget = () => {
 
           <button
             onClick={() => setOpen((v) => !v)}
-            aria-label={open ? 'Fechar opções de contato' : 'Abrir opções de contato'}
+            aria-label={open ? t.a11y.closeContact : t.a11y.openContact}
             aria-expanded={open}
             className="focus-ring icon-btn-glass relative w-[52px] h-[52px]"
           >

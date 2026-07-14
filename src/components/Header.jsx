@@ -3,23 +3,19 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { Menu, X, MessageCircle } from 'lucide-react'
 import { WHATSAPP_URL } from '../config/contact'
 import useActiveSection from '../hooks/useActiveSection'
+import { useLanguage } from '../i18n/LanguageContext'
 import ThemeToggle from './ui/ThemeToggle'
+import LanguageSwitcher from './ui/LanguageSwitcher'
 
-const NAV_LINKS = [
-  { label: 'Início', href: '#inicio', id: 'inicio' },
-  { label: 'Sobre', href: '#sobre', id: 'sobre' },
-  { label: 'Projetos', href: '#projetos', id: 'projetos' },
-  { label: 'Serviços', href: '#servicos', id: 'servicos' },
-  { label: 'Tecnologias', href: '#tecnologias', id: 'tecnologias' },
-  { label: 'Contato', href: '#contato', id: 'contato' },
-]
-
-const NAV_IDS = NAV_LINKS.map((link) => link.id)
+const NAV_IDS = ['inicio', 'sobre', 'projetos', 'servicos', 'tecnologias', 'contato']
 
 const Header = () => {
+  const { t } = useLanguage()
   const [scrolled, setScrolled] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
   const [activeId, scrollToSection] = useActiveSection(NAV_IDS)
+
+  const navLinks = NAV_IDS.map((id) => ({ id, href: `#${id}`, label: t.nav[id] }))
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20)
@@ -46,7 +42,7 @@ const Header = () => {
 
         {/* Desktop */}
         <ul className="hidden lg:flex items-center gap-1">
-          {NAV_LINKS.map((link) => {
+          {navLinks.map((link) => {
             const isActive = activeId === link.id
             return (
               <li key={link.href}>
@@ -67,6 +63,7 @@ const Header = () => {
         </ul>
 
         <div className="flex items-center gap-2 sm:gap-3">
+          <LanguageSwitcher />
           <ThemeToggle />
 
           <a
@@ -76,14 +73,14 @@ const Header = () => {
             className="btn-primary btn-primary-sm hidden lg:inline-flex"
           >
             <MessageCircle className="w-4 h-4" />
-            Fale comigo
+            {t.nav.cta}
           </a>
 
           {/* Mobile toggle */}
           <button
             onClick={() => setMenuOpen(!menuOpen)}
             className="focus-ring icon-btn-glass lg:hidden w-10 h-10"
-            aria-label={menuOpen ? 'Fechar menu' : 'Abrir menu'}
+            aria-label={menuOpen ? t.a11y.closeMenu : t.a11y.openMenu}
             aria-expanded={menuOpen}
           >
             {menuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -102,7 +99,7 @@ const Header = () => {
             className="lg:hidden overflow-hidden bg-base-950/95 backdrop-blur-xl border-b border-ink-1/10"
           >
             <ul className="px-6 py-4 space-y-1">
-              {NAV_LINKS.map((link) => {
+              {navLinks.map((link) => {
                 const isActive = activeId === link.id
                 return (
                   <li key={link.href}>
@@ -129,7 +126,7 @@ const Header = () => {
                   className="btn-primary w-full"
                 >
                   <MessageCircle className="w-4 h-4" />
-                  Fale comigo
+                  {t.nav.cta}
                 </a>
               </li>
             </ul>

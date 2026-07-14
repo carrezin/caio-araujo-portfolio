@@ -4,6 +4,22 @@ Todas as mudanças notáveis deste projeto são documentadas neste arquivo.
 
 O formato segue [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/) e o projeto usa [Versionamento Semântico](https://semver.org/lang/pt-BR/).
 
+## [1.1.0] - 2026-07-14
+
+### Adicionado
+
+- Suporte a 3 idiomas: Português (Brasil), Português (Portugal) e Inglês, com todo o conteúdo do site traduzido (navegação, seções, projetos, serviços, tecnologias, contato e rodapé).
+- Detecção automática de idioma por geolocalização (IP, sem prompt de permissão) com fallback para o idioma do navegador; escolha manual do usuário é sempre respeitada e persistida.
+- Seletor de idioma no header (bandeira do país atual), com popover em estilo Liquid Glass listando as 3 opções — presente tanto no header desktop quanto no menu mobile.
+- Bandeiras renderizadas como SVG embutido (`FlagIcon`) em vez de emoji Unicode — evita o problema conhecido do Windows de exibir o código do país em texto ("BR") em vez do desenho da bandeira.
+- Novos projetos no portfólio, com números reais e generalizados (sem nomes de empresa/fornecedor): migração de CRM Cloud → On-Premise, distribuição segura de carteira por estado, plataforma de discagem e IA de voz, overlay de reconhecimento em tempo real, cadastro assistido por leitura de PDF, dashboard de comissão e produtividade, e MVP de recrutamento e admissão digital.
+- Números de impacto (seção Stats) e texto da seção Sobre atualizados para refletir a escala real do trabalho (440k+ negócios em CRM, 2M+ contatos, 7+ sistemas entregues, 0 erros em cargas críticas).
+
+### Alterado
+
+- `document.title`, meta description e `og:locale` agora são atualizados dinamicamente conforme o idioma selecionado.
+- Arquivos de conteúdo estático (`src/data/*.js`) substituídos por dicionários de i18n (`src/i18n/locales/*.js`), um por idioma, contendo todo o texto e os dados de projetos/serviços/tecnologias.
+
 ## [1.0.2] - 2026-07-04
 
 ### Corrigido

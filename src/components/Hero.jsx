@@ -4,19 +4,23 @@ import { ArrowRight, Sparkles, TrendingUp, Activity, CircleDollarSign } from 'lu
 import ParticleBackground from './ui/ParticleBackground'
 import HeroBackgroundLite from './ui/HeroBackgroundLite'
 import useIsMobile from '../hooks/useIsMobile'
+import { useLanguage } from '../i18n/LanguageContext'
 
-const FLOATING_TAGS = [
-  { label: 'Bitrix24', className: 'top-[18%] left-[6%]', delay: 0 },
-  { label: 'APIs', className: 'top-[32%] right-[8%]', delay: 0.4 },
-  { label: 'Dashboards', className: 'top-[58%] left-[4%]', delay: 0.8 },
-  { label: 'Automações', className: 'top-[70%] right-[6%]', delay: 1.2 },
-  { label: 'CRM', className: 'top-[12%] right-[22%]', delay: 1.6 },
-  { label: 'Integrações', className: 'top-[80%] left-[20%]', delay: 2 },
+const FLOATING_POSITIONS = [
+  { className: 'top-[18%] left-[6%]', delay: 0 },
+  { className: 'top-[32%] right-[8%]', delay: 0.4 },
+  { className: 'top-[58%] left-[4%]', delay: 0.8 },
+  { className: 'top-[70%] right-[6%]', delay: 1.2 },
+  { className: 'top-[12%] right-[22%]', delay: 1.6 },
+  { className: 'top-[80%] left-[20%]', delay: 2 },
 ]
 
 const BARS = [35, 55, 40, 70, 50, 85, 60, 95, 75, 88, 65, 100]
+const MOCKUP_ICONS = [TrendingUp, Activity, CircleDollarSign]
+const MOCKUP_COLORS = ['text-accent-cyan', 'text-accent-purple', 'text-accent-gold']
 
 const Hero = () => {
+  const { t } = useLanguage()
   const isMobile = useIsMobile()
 
   // Em mobile, o Hero precisa aparecer o mais rápido possível: sem stagger
@@ -45,16 +49,16 @@ const Hero = () => {
 
       {/* Tags flutuantes — decorativas, puladas em mobile para reduzir animações simultâneas */}
       {!isMobile &&
-        FLOATING_TAGS.map((tag) => (
+        t.hero.floatingTags.map((label, i) => (
           <motion.div
-            key={tag.label}
+            key={label}
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: tag.delay + 1, duration: 0.8 }}
-            className={`hidden md:block absolute ${tag.className} z-10`}
+            transition={{ delay: FLOATING_POSITIONS[i].delay + 1, duration: 0.8 }}
+            className={`hidden md:block absolute ${FLOATING_POSITIONS[i].className} z-10`}
           >
             <div className="glass-card px-4 py-2 text-sm font-medium text-ink-2 animate-float shadow-lg shadow-accent-blue/10">
-              {tag.label}
+              {label}
             </div>
           </motion.div>
         ))}
@@ -69,9 +73,7 @@ const Hero = () => {
           className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-accent-blue/10 border border-accent-blue/20 mb-8 backdrop-blur-sm"
         >
           <Sparkles className="h-4 w-4 text-accent-cyan" />
-          <span className="text-sm font-medium text-ink-2">
-            Analista de TI • Automações • Integrações • Soluções Web
-          </span>
+          <span className="text-sm font-medium text-ink-2">{t.hero.badge}</span>
         </motion.div>
 
         <motion.h1
@@ -81,8 +83,9 @@ const Hero = () => {
           animate="visible"
           className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tighter mb-6 text-gradient-white"
         >
-          Transformo processos manuais em{' '}
-          <span className="text-gradient">soluções digitais inteligentes</span>.
+          {t.hero.titlePrefix}
+          <span className="text-gradient">{t.hero.titleHighlight}</span>
+          {t.hero.titleSuffix}
         </motion.h1>
 
         <motion.p
@@ -92,8 +95,7 @@ const Hero = () => {
           animate="visible"
           className="max-w-2xl mx-auto text-lg md:text-xl text-ink-3 mb-10 leading-relaxed"
         >
-          Sou Caio Araujo, Analista de TI e Desenvolvedor de Automações com experiência em CRM,
-          integrações, APIs, dashboards e sistemas internos para ambientes corporativos.
+          {t.hero.subtitle}
         </motion.p>
 
         <motion.div
@@ -104,11 +106,11 @@ const Hero = () => {
           className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16"
         >
           <a href="#projetos" className="btn-primary w-full sm:w-auto">
-            Ver projetos
+            {t.hero.ctaProjects}
             <ArrowRight className="h-5 w-5" />
           </a>
           <a href="#contato" className="btn-secondary w-full sm:w-auto">
-            Entrar em contato
+            {t.hero.ctaContact}
           </a>
         </motion.div>
 
@@ -126,21 +128,20 @@ const Hero = () => {
               <span className="w-3 h-3 rounded-full bg-red-400/70" />
               <span className="w-3 h-3 rounded-full bg-amber-400/70" />
               <span className="w-3 h-3 rounded-full bg-emerald-400/70" />
-              <span className="ml-3 text-xs text-ink-4 font-mono">dashboard — operação em tempo real</span>
+              <span className="ml-3 text-xs text-ink-4 font-mono">{t.hero.mockupLabel}</span>
             </div>
 
             <div className="grid grid-cols-3 gap-3 md:gap-4 mb-4">
-              {[
-                { icon: TrendingUp, label: 'Negócios', value: '700k+', color: 'text-accent-cyan' },
-                { icon: Activity, label: 'Automações ativas', value: '24/7', color: 'text-accent-purple' },
-                { icon: CircleDollarSign, label: 'Contatos CRM', value: '1M+', color: 'text-accent-gold' },
-              ].map((item) => (
-                <div key={item.label} className="chip-glass rounded-xl p-3 md:p-4">
-                  <item.icon className={`w-4 h-4 md:w-5 md:h-5 ${item.color} mb-2`} />
-                  <p className="text-lg md:text-2xl font-bold text-ink-1">{item.value}</p>
-                  <p className="text-[10px] md:text-xs text-ink-4">{item.label}</p>
-                </div>
-              ))}
+              {t.hero.mockupStats.map((item, i) => {
+                const ItemIcon = MOCKUP_ICONS[i]
+                return (
+                  <div key={item.label} className="chip-glass rounded-xl p-3 md:p-4">
+                    <ItemIcon className={`w-4 h-4 md:w-5 md:h-5 ${MOCKUP_COLORS[i]} mb-2`} />
+                    <p className="text-lg md:text-2xl font-bold text-ink-1">{item.value}</p>
+                    <p className="text-[10px] md:text-xs text-ink-4">{item.label}</p>
+                  </div>
+                )
+              })}
             </div>
 
             {/* Barras simulando gráfico — animação de height só no desktop

@@ -6,9 +6,10 @@ import {
   Code2, Terminal, Boxes, Server,
   Building2, Lightbulb, MessagesSquare, Zap, RefreshCw,
   Search, ClipboardList, CheckCircle2, PackageCheck,
+  Shuffle, FileSearch, UserPlus,
 } from 'lucide-react'
 
-// Mapeia nomes (strings usadas nos arquivos de data/) para componentes lucide.
+// Mapeia nomes (strings usadas nos dicionários de i18n) para componentes lucide.
 const ICONS = {
   Briefcase, Users, BarChart3, Database, Rocket, Scale,
   PhoneCall, ShieldCheck, MonitorPlay, FileSignature, MessageSquare, ServerCog, DatabaseZap, LayoutDashboard,
@@ -16,6 +17,7 @@ const ICONS = {
   Code2, Terminal, Boxes, Server,
   Building2, Lightbulb, MessagesSquare, Zap, RefreshCw,
   Search, ClipboardList, CheckCircle2, PackageCheck,
+  Shuffle, FileSearch, UserPlus,
 }
 
 const Icon = ({ name, className }) => {

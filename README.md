@@ -41,13 +41,13 @@ site-portfolio/
 │   ├── index.css                 # tokens de tema (CSS vars), classes utilitárias (glass, botões)
 │   ├── config/
 │   │   └── contact.js            # WHATSAPP_URL, EMAIL, LINKEDIN_URL, GITHUB_URL, INSTAGRAM_URL, AVATAR_URL
-│   ├── data/                     # conteúdo editável em arrays (sem tocar em JSX)
-│   │   ├── projects.js           # 8 projetos em destaque
-│   │   ├── services.js           # 10 serviços oferecidos
-│   │   ├── techs.js              # stack técnica exibida (4 grupos)
-│   │   ├── stats.js              # números de impacto
-│   │   ├── process.js            # 5 etapas do processo de trabalho
-│   │   └── differentials.js      # "Por que trabalhar comigo?"
+│   ├── i18n/                      # internacionalização (pt-BR, pt-PT, en)
+│   │   ├── LanguageContext.jsx    # Provider + useLanguage() (idioma atual, t, setLang)
+│   │   ├── detectLanguage.js      # detecção por geolocalização IP + navegador + localStorage
+│   │   └── locales/
+│   │       ├── ptBR.js            # todo o texto/dados do site em português (Brasil)
+│   │       ├── ptPT.js            # idem, em português (Portugal)
+│   │       └── en.js              # idem, em inglês
 │   ├── hooks/
 │   │   ├── useActiveSection.js   # scroll-spy (IntersectionObserver) p/ nav ativa
 │   │   ├── useTheme.js           # tema claro/escuro (persistido + preferência do sistema)
@@ -75,6 +75,8 @@ site-portfolio/
 │           ├── SectionFallback.jsx     # fallback discreto do React.lazy/Suspense
 │           ├── ThemeToggle.jsx         # botão de alternância claro/escuro
 │           ├── SectionTitle.jsx        # badge + título + subtítulo (reutilizável)
+│           ├── LanguageSwitcher.jsx    # seletor de idioma (bandeira, popover Liquid Glass)
+│           ├── FlagIcon.jsx            # bandeiras como SVG embutido (BR/PT/US)
 │           └── Icon.jsx                # mapeamento string → ícone lucide-react
 ├── public/
 │   ├── icons/                    # ícones do PWA (192, 512, maskable, apple-touch-icon)
@@ -83,18 +85,24 @@ site-portfolio/
 
 ## Como editar o conteúdo
 
-Você **não precisa mexer em componentes React** para atualizar textos e contatos — tudo fica em arquivos de dados:
+Você **não precisa mexer em componentes React** para atualizar textos e contatos:
 
 | O que mudar | Onde editar |
 |---|---|
 | WhatsApp, e-mail, LinkedIn, GitHub, Instagram | `src/config/contact.js` |
 | Foto de perfil (seção Sobre) | `AVATAR_URL` em `src/config/contact.js` |
-| Projetos do portfólio | `src/data/projects.js` |
-| Serviços oferecidos | `src/data/services.js` |
-| Tecnologias exibidas | `src/data/techs.js` |
-| Números de impacto | `src/data/stats.js` |
-| Etapas do processo de trabalho | `src/data/process.js` |
-| Diferenciais competitivos | `src/data/differentials.js` |
+| Qualquer texto do site (nav, hero, sobre, projetos, serviços, tecnologias, diferenciais, processo, contato, rodapé) | `src/i18n/locales/ptBR.js`, `ptPT.js` e `en.js` — **um arquivo por idioma**, edite os 3 para manter tudo traduzido |
+
+Cada arquivo de idioma é um único objeto grande e comentado por seção (`hero`, `about`, `projects`, `services`, `techGroups`, `differentials`, `process`, `contact`, `footer`...). Basta abrir o arquivo do idioma desejado e editar o texto direto — a estrutura (ícones, gradientes, ids) é igual nos 3 arquivos, só o texto muda.
+
+## Internacionalização (i18n)
+
+O site tem 3 idiomas: **Português (Brasil)**, **Português (Portugal)** e **Inglês**.
+
+- **Detecção automática**: na primeira visita, o idioma é detectado por geolocalização de IP (serviço gratuito, sem prompt de permissão do navegador) — Brasil e demais países lusófonos caem em português, o resto em inglês. Se a geolocalização falhar (rede lenta, bloqueio de ad-blocker), cai para o idioma configurado no navegador (`navigator.language`).
+- **Escolha manual**: o seletor de idioma no header (ícone de bandeira, ao lado do botão de tema) abre um menu com as 3 opções. A escolha do usuário é salva em `localStorage` e **sempre tem prioridade** sobre a detecção automática nas próximas visitas.
+- **Bandeiras em SVG**: as bandeiras são desenhadas em SVG embutido (`FlagIcon.jsx`), não em emoji Unicode — no Windows, emoji de bandeira regional costuma cair para o código do país em texto ("BR") em vez do desenho, por limitação de fonte do sistema. SVG garante a bandeira de verdade em qualquer SO/navegador.
+- **Sem flash de idioma errado**: um script no `index.html` já aplica o idioma salvo (ou detectado pelo navegador) no atributo `lang` do `<html>` antes do primeiro paint, do mesmo jeito que já era feito para o tema claro/escuro.
 
 ## Design system
 

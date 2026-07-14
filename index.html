@@ -31,6 +31,18 @@
           var isMobile = window.matchMedia('(max-width: 767px), (pointer: coarse)').matches
           document.documentElement.classList.toggle('perf-mode', isMobile)
         } catch (e) {}
+        // Define o atributo lang o mais cedo possível (idioma salvo ou idioma
+        // do navegador) — a detecção completa por geolocalização acontece
+        // depois, de forma assíncrona, dentro do React (i18n/LanguageContext).
+        try {
+          var savedLang = localStorage.getItem('language')
+          var htmlLang = savedLang
+          if (!htmlLang) {
+            var nav = (navigator.language || '').toLowerCase()
+            htmlLang = nav.startsWith('pt-pt') ? 'pt-PT' : nav.startsWith('pt') ? 'pt-BR' : 'en'
+          }
+          document.documentElement.setAttribute('lang', htmlLang)
+        } catch (e) {}
       })()
     </script>
     <title>Caio Araujo — Analista de TI & Desenvolvedor de Automações</title>

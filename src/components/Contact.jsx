@@ -2,54 +2,22 @@ import React from 'react'
 import { motion } from 'framer-motion'
 import { MessageCircle, Mail, Linkedin, Github, Instagram, ArrowRight } from 'lucide-react'
 import { WHATSAPP_URL, EMAIL, LINKEDIN_URL, GITHUB_URL, INSTAGRAM_URL } from '../config/contact'
+import { useLanguage } from '../i18n/LanguageContext'
 
 // Seção de contato adaptada do template "ProfessionalConnect":
-// cards com glow/shimmer no hover, orbs animados e luz que segue o mouse.
-const PLATFORMS = [
-  {
-    name: 'WhatsApp',
-    icon: MessageCircle,
-    gradient: 'from-green-500 to-emerald-400',
-    shadowColor: 'rgba(34, 197, 94, 0.5)',
-    link: WHATSAPP_URL,
-    description: 'Resposta rápida e direta',
-  },
-  {
-    name: 'E-mail',
-    icon: Mail,
-    gradient: 'from-cyan-500 to-blue-400',
-    shadowColor: 'rgba(34, 211, 238, 0.5)',
-    link: `mailto:${EMAIL}`,
-    description: EMAIL,
-  },
-  {
-    name: 'LinkedIn',
-    icon: Linkedin,
-    gradient: 'from-blue-600 to-blue-400',
-    shadowColor: 'rgba(59, 130, 246, 0.5)',
-    link: LINKEDIN_URL,
-    description: 'Perfil profissional',
-  },
-  {
-    name: 'GitHub',
-    icon: Github,
-    gradient: 'from-slate-600 to-slate-400',
-    shadowColor: 'rgba(148, 163, 184, 0.5)',
-    link: GITHUB_URL,
-    description: 'Repositórios e código',
-  },
-  {
-    name: 'Instagram',
-    icon: Instagram,
-    gradient: 'from-purple-600 via-pink-600 to-orange-500',
-    shadowColor: 'rgba(219, 39, 119, 0.5)',
-    link: INSTAGRAM_URL,
-    description: 'Bastidores e conteúdo',
-  },
+// cards com glow/shimmer no hover, orbs animados e luz que segue o mouse
+// (a luz do cursor agora é global — ui/CursorGlow.jsx, montada no App).
+const PLATFORM_META = [
+  { name: 'WhatsApp', icon: MessageCircle, gradient: 'from-green-500 to-emerald-400', shadowColor: 'rgba(34, 197, 94, 0.5)', link: WHATSAPP_URL },
+  { name: 'E-mail', icon: Mail, gradient: 'from-cyan-500 to-blue-400', shadowColor: 'rgba(34, 211, 238, 0.5)', link: `mailto:${EMAIL}`, descriptionOverride: EMAIL },
+  { name: 'LinkedIn', icon: Linkedin, gradient: 'from-blue-600 to-blue-400', shadowColor: 'rgba(59, 130, 246, 0.5)', link: LINKEDIN_URL },
+  { name: 'GitHub', icon: Github, gradient: 'from-slate-600 to-slate-400', shadowColor: 'rgba(148, 163, 184, 0.5)', link: GITHUB_URL },
+  { name: 'Instagram', icon: Instagram, gradient: 'from-purple-600 via-pink-600 to-orange-500', shadowColor: 'rgba(219, 39, 119, 0.5)', link: INSTAGRAM_URL },
 ]
 
-// A luz que segue o cursor agora é global (ui/CursorGlow.jsx, montada no App).
 const Contact = () => {
+  const { t } = useLanguage()
+
   return (
     <section id="contato" className="relative section-padding overflow-hidden scroll-mt-24">
       {/* Background animado */}
@@ -70,19 +38,14 @@ const Contact = () => {
           transition={{ duration: 0.8 }}
           className="text-center mb-16"
         >
-          <span className="badge-glass mb-4">Vamos conversar</span>
-          <h2 className="text-4xl md:text-6xl font-bold tracking-tight text-gradient-white mb-6">
-            Vamos transformar sua ideia em uma solução digital?
-          </h2>
-          <p className="text-lg md:text-xl text-ink-3 max-w-2xl mx-auto leading-relaxed">
-            Se você precisa de uma landing page, automação, dashboard, integração ou ferramenta
-            interna para sua empresa, entre em contato comigo.
-          </p>
+          <span className="badge-glass mb-4">{t.contact.badge}</span>
+          <h2 className="text-4xl md:text-6xl font-bold tracking-tight text-gradient-white mb-6">{t.contact.title}</h2>
+          <p className="text-lg md:text-xl text-ink-3 max-w-2xl mx-auto leading-relaxed">{t.contact.subtitle}</p>
         </motion.div>
 
         {/* Cards de contato */}
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-          {PLATFORMS.map((platform, index) => (
+          {PLATFORM_META.map((platform, index) => (
             <motion.a
               key={platform.name}
               href={platform.link}
@@ -116,10 +79,10 @@ const Contact = () => {
                   </div>
                   <h3 className="text-ink-1 font-semibold mb-1">{platform.name}</h3>
                   <p className="text-ink-4 text-xs break-all transition-colors duration-300 group-hover:text-ink-3">
-                    {platform.description}
+                    {platform.descriptionOverride || t.contact.platforms[platform.name]}
                   </p>
                   <div className="mt-4 flex items-center text-ink-4 group-hover:text-ink-1 transition-colors duration-300">
-                    <span className="text-sm font-medium">Conectar</span>
+                    <span className="text-sm font-medium">{t.contact.connect}</span>
                     <ArrowRight className="w-4 h-4 ml-2 transition-transform duration-300 group-hover:translate-x-1" />
                   </div>
                 </div>
@@ -146,7 +109,7 @@ const Contact = () => {
             className="focus-ring group relative inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-accent-blue to-accent-cyan rounded-full text-white font-semibold overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-accent-cyan/30"
           >
             <MessageCircle className="w-5 h-5 relative z-10" />
-            <span className="relative z-10">Iniciar conversa no WhatsApp</span>
+            <span className="relative z-10">{t.contact.ctaButton}</span>
             <ArrowRight className="w-4 h-4 relative z-10 transition-transform duration-300 group-hover:translate-x-1" />
             <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 bg-gradient-to-r from-transparent via-white/20 to-transparent" />
           </a>

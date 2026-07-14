@@ -2,20 +2,22 @@ import React from 'react'
 import { motion } from 'framer-motion'
 import { Home, User, Briefcase, Wrench, MessageCircle } from 'lucide-react'
 import useActiveSection from '../hooks/useActiveSection'
+import { useLanguage } from '../i18n/LanguageContext'
 
 // Navegação inferior fixa, pensada para uso com o polegar em telas de toque.
 // Some em telas >= lg, onde o Header já oferece a navegação completa.
 const NAV_ITEMS = [
-  { id: 'inicio', label: 'Início', icon: Home },
-  { id: 'sobre', label: 'Sobre', icon: User },
-  { id: 'projetos', label: 'Projetos', icon: Briefcase },
-  { id: 'servicos', label: 'Serviços', icon: Wrench },
-  { id: 'contato', label: 'Contato', icon: MessageCircle },
+  { id: 'inicio', icon: Home },
+  { id: 'sobre', icon: User },
+  { id: 'projetos', icon: Briefcase },
+  { id: 'servicos', icon: Wrench },
+  { id: 'contato', icon: MessageCircle },
 ]
 
 const NAV_IDS = NAV_ITEMS.map((item) => item.id)
 
 const MobileNav = () => {
+  const { t } = useLanguage()
   const [activeId, scrollToSection] = useActiveSection(NAV_IDS)
 
   return (
@@ -25,11 +27,12 @@ const MobileNav = () => {
       transition={{ duration: 0.5, delay: 0.4, ease: 'easeOut' }}
       className="lg:hidden fixed bottom-0 inset-x-0 z-50 px-3 pt-2"
       style={{ paddingBottom: 'max(0.625rem, env(safe-area-inset-bottom))' }}
-      aria-label="Navegação principal (mobile)"
+      aria-label={t.a11y.mobileNavLabel}
     >
       <div className="liquid-glass flex items-center justify-around gap-1 max-w-md mx-auto rounded-2xl">
         {NAV_ITEMS.map((item) => {
           const isActive = activeId === item.id
+          const label = t.mobileNav[item.id]
           return (
             <a
               key={item.id}
@@ -58,7 +61,7 @@ const MobileNav = () => {
                   isActive ? 'text-ink-1' : 'text-ink-3'
                 }`}
               >
-                {item.label}
+                {label}
               </span>
             </a>
           )
