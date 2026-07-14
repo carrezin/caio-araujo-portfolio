@@ -281,6 +281,16 @@ body {
     @apply bg-clip-text text-transparent bg-gradient-to-r from-accent-blue via-accent-cyan to-accent-purple;
   }
 
+  /* Esconde a barra de rolagem nativa mantendo o scroll funcional (usado na
+     navegação inferior mobile — precisa parecer sempre fixa/estável). */
+  .scrollbar-hidden {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .scrollbar-hidden::-webkit-scrollbar {
+    display: none;
+  }
+
   /* Cursor do Typewriter — pisca via CSS (compositor), sem setInterval em JS.
      Cor sólida ciano (compatível com o gradiente azul/roxo do texto ao lado). */
   .typewriter-cursor {

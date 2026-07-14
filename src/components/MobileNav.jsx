@@ -1,14 +1,14 @@
 import React from 'react'
 import { motion } from 'framer-motion'
-import { Home, User, Briefcase, Wrench, Code2, MessageCircle } from 'lucide-react'
+import { User, Briefcase, Wrench, Code2, MessageCircle } from 'lucide-react'
 import useActiveSection from '../hooks/useActiveSection'
 import { useLanguage } from '../i18n/LanguageContext'
 
 // Navegação inferior fixa, pensada para uso com o polegar em telas de toque.
 // Único sistema de navegação no mobile (o header não tem mais menu
-// hambúrguer) — por isso inclui as mesmas 6 seções do menu desktop.
+// hambúrguer). "Início" não tem item próprio: o logo no header já cobre
+// essa função e, com 5 itens, tudo cabe sem precisar de scroll horizontal.
 const NAV_ITEMS = [
-  { id: 'inicio', icon: Home },
   { id: 'sobre', icon: User },
   { id: 'projetos', icon: Briefcase },
   { id: 'servicos', icon: Wrench },
@@ -31,11 +31,11 @@ const MobileNav = () => {
       style={{ paddingBottom: 'max(0.625rem, env(safe-area-inset-bottom))' }}
       aria-label={t.a11y.mobileNavLabel}
     >
-      {/* overflow-x-auto: com 6 itens, telas muito estreitas (320px) rolam
-          horizontalmente em vez de espremer ícone/texto até ficar ilegível.
-          Sem larguras fixas: cada item usa o espaço que o conteúdo pede
-          (shrink-0), então isso só ativa quando realmente não cabe. */}
-      <div className="liquid-glass flex items-center gap-1 max-w-md mx-auto rounded-2xl overflow-x-auto">
+      {/* scrollbar-hidden: mantém overflow-x-auto como rede de segurança em
+          telas muito estreitas, mas sem a barra de rolagem visível — a barra
+          de navegação deve parecer sempre fixa/estável, nunca com o "trilho"
+          de scroll aparente. */}
+      <div className="liquid-glass scrollbar-hidden flex items-center gap-1 max-w-md mx-auto rounded-2xl overflow-x-auto">
         {NAV_ITEMS.map((item) => {
           const isActive = activeId === item.id
           const label = t.nav[item.id]

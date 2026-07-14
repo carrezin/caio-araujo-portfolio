@@ -32,14 +32,20 @@ const Differentials = lazy(importDifferentials)
 const Process = lazy(importProcess)
 const Contact = lazy(importContact)
 
-// Pré-carrega todos os chunks das seções assim que a página termina o
-// primeiro paint. Isso resolve dois problemas de uma vez:
+// Pré-carrega todos os chunks das seções assim que o componente monta. Isso
+// resolve dois problemas de uma vez:
 // 1) "flash"/salto de layout no primeiro scroll — sem isso, o Suspense
 //    mostra o fallback (240px) e troca para a altura real da seção bem no
 //    meio da rolagem, quando o usuário já está vendo aquele trecho.
 // 2) o menu de navegação "pulava" Projetos/Serviços — enquanto o chunk não
 //    carrega, a seção (e o id="projetos"/id="servicos") simplesmente não
 //    existe no DOM, então o observer de scroll não tem o que observar.
+// requestIdleCallback foi descartado de propósito: o navegador só considera
+// a thread "idle" depois que as animações de entrada do Hero (Framer Motion)
+// terminam de disparar frames, então o disparo podia atrasar 1-2s+ — tempo
+// suficiente para o usuário rolar até uma seção ainda não carregada e ver o
+// fallback. Os chunks são poucos KB cada; iniciar o fetch de todos de
+// imediato (sem esperar idle) é a troca certa para eliminar o flash.
 // Os imports são os mesmos usados no lazy() acima, então o módulo já vem do
 // cache do navegador quando o Suspense realmente precisar dele — não há
 // download duplicado.
@@ -55,14 +61,7 @@ function usePreloadSections() {
       importProcess,
       importContact,
     ]
-    const idleSchedule = window.requestIdleCallback || ((cb) => window.setTimeout(cb, 200))
-    const idleCancel = window.cancelIdleCallback || window.clearTimeout
-
-    const handle = idleSchedule(() => {
-      importers.forEach((importFn) => importFn())
-    })
-
-    return () => idleCancel(handle)
+    importers.forEach((importFn) => importFn())
   }, [])
 }
 

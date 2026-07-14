@@ -84,21 +84,24 @@ const Hero = () => {
           variants={fadeUp}
           initial="hidden"
           animate="visible"
-          // min-h em "em" (relativo ao próprio font-size do h1, que muda por
-          // breakpoint) reserva espaço para o número de linhas esperado em
-          // cada tamanho de tela, para as frases do typewriter não empurrarem
-          // os botões/parágrafo abaixo enquanto digitam/apagam. No mobile
-          // (texto menor, mais quebras) reserva mais linhas; no desktop,
-          // ~3 linhas — igual à composição original.
-          className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tighter mb-6 text-gradient-white min-h-[4.5em] md:min-h-[3.05em] lg:min-h-[3.05em]"
+          className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tighter mb-6"
         >
-          {t.hero.titlePrefix}
-          {/* aria-label estável (não muda a cada letra digitada) — leitor de
-              tela ouve a frase completa de uma vez; o texto animado em si é
-              puramente visual (aria-hidden). */}
-          <span className="text-gradient" aria-label={t.hero.typewriterWords[0]}>
-            <span aria-hidden="true">
-              <Typewriter words={t.hero.typewriterWords} reducedMotion={reducedMotion} />
+          {/* Bloco próprio para o texto fixo (branco): como não compartilha a
+              mesma linha do texto azul dinâmico, o comprimento variável do
+              typewriter (digitando/apagando) nunca altera a quebra de linha
+              nem a posição destas palavras — elas ficam sempre no mesmo lugar. */}
+          <span className="block text-gradient-white">{t.hero.titlePrefix}</span>
+          {/* min-h em "em" reserva espaço para o número de linhas esperado do
+              texto azul isoladamente, para as frases do typewriter não
+              empurrarem o parágrafo/botões abaixo enquanto digitam/apagam. */}
+          <span className="block text-gradient min-h-[2.2em] md:min-h-[1.15em] lg:min-h-[1.15em]">
+            {/* aria-label estável (não muda a cada letra digitada) — leitor de
+                tela ouve a frase completa de uma vez; o texto animado em si é
+                puramente visual (aria-hidden). */}
+            <span aria-label={t.hero.typewriterWords[0]}>
+              <span aria-hidden="true">
+                <Typewriter words={t.hero.typewriterWords} reducedMotion={reducedMotion} />
+              </span>
             </span>
           </span>
         </motion.h1>
